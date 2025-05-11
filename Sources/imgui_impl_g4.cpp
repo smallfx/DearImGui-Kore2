@@ -153,7 +153,7 @@ void ImGui_ImplG4_RenderDrawData(ImDrawData *draw_data) {
   }
 
   kong_set_vertex_buffer_vertex_in(g_KoreCommandList, &g_VB);
-  kore_gpu_command_list_set_index_buffer(g_KoreCommandList, &g_IB, KORE_GPU_INDEX_FORMAT_UINT32, 0, total_index_count);
+  kore_gpu_command_list_set_index_buffer(g_KoreCommandList, &g_IB, KORE_GPU_INDEX_FORMAT_UINT32, 0, total_index_count * sizeof(uint32_t));
 
   // Setup desired DX state
   ImGui_ImplG4_SetupRenderState(draw_data);
