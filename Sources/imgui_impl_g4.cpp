@@ -78,6 +78,24 @@ static void ImGui_ImplG4_SetupRenderState(ImDrawData *draw_data) {
   ctx->RSSetState(g_pRasterizerState);*/
 }
 
+void ImGui_ImplG4_EnsureFontTexData() {
+    if (first_update) {
+      kore_gpu_image_copy_buffer source = {
+          .buffer         = &g_FontImageBuffer,
+          .bytes_per_row  = (uint32_t)tex_stride,
+          .rows_per_image = font_image_height,
+      };
+
+      kore_gpu_image_copy_texture destination = {
+          .texture = &g_FontTexture,
+      };
+
+      kore_gpu_command_list_copy_buffer_to_texture(g_KoreCommandList, &source, &destination, font_image_width, font_image_height, 1);
+
+      first_update = false;
+    }
+}
+
 // Render function
 // (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
 void ImGui_ImplG4_RenderDrawData(ImDrawData *draw_data) {
@@ -105,22 +123,6 @@ void ImGui_ImplG4_RenderDrawData(ImDrawData *draw_data) {
     };
     kore_gpu_device_create_buffer(g_KoreDevice, &params, &g_IB);
     g_IndexBufferInitialized = true;
-  }
-
-  if (first_update) {
-    kore_gpu_image_copy_buffer source = {
-        .buffer         = &g_FontImageBuffer,
-        .bytes_per_row  = (uint32_t)tex_stride,
-        .rows_per_image = font_image_height,
-    };
-
-    kore_gpu_image_copy_texture destination = {
-        .texture = &g_FontTexture,
-    };
-
-    kore_gpu_command_list_copy_buffer_to_texture(g_KoreCommandList, &source, &destination, font_image_width, font_image_height, 1);
-
-    first_update = false;
   }
 
 
@@ -271,7 +273,7 @@ void ImGui_ImplG4_RenderDrawData(ImDrawData *draw_data) {
         kore_gpu_command_list_set_scissor_rect(g_KoreCommandList, (int)clip_min.x, (int)clip_min.y, (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y));
 
         // Draw
-        kore_gpu_command_list_draw_indexed(g_KoreCommandList, pcmd->ElemCount, 1, pcmd->IdxOffset + global_idx_offset, pcmd->VtxOffset + global_vtx_offset, 0);
+        kore_gpu_command_list_draw_indexed(g_KoreCommandList, pcmd->ElemCount, 1, (pcmd->IdxOffset + global_idx_offset) * sizeof(ImDrawIdx), pcmd->VtxOffset + global_vtx_offset, 0);
       }
     }
     global_idx_offset += cmd_list->IdxBuffer.Size;

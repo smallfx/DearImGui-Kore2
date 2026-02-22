@@ -53,7 +53,6 @@ static void update(void *data) {
 	        },
 	    .color_attachments_count = 1,
 	};
-	kore_gpu_command_list_begin_render_pass(&commandlist, &parameters);
 
 	// Start the Dear ImGui frame
 	ImGui_ImplG4_NewFrame();
@@ -101,12 +100,17 @@ static void update(void *data) {
 	ImGui::Render();
 	/*g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);*/
 	//kinc_g4_clear(KINC_G4_CLEAR_COLOR, 0xff0000ff, 0.0f, 0);
+
+    ImGui_ImplG4_EnsureFontTexData();
+    
+    kore_gpu_command_list_begin_render_pass(&commandlist, &parameters);
+
 	ImGui_ImplG4_RenderDrawData(ImGui::GetDrawData());
 
 	//kinc_g4_end(0);
 	//kinc_g4_swap_buffers();
 
-  kore_gpu_command_list_end_render_pass(&commandlist);
+    kore_gpu_command_list_end_render_pass(&commandlist);
 	kore_gpu_command_list_present(&commandlist);
 	kore_gpu_device_execute_command_list(&device, &commandlist);
 

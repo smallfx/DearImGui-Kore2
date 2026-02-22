@@ -12,6 +12,7 @@
 IMGUI_IMPL_API bool     ImGui_ImplG4_Init(kore_gpu_device *device, kore_gpu_command_list *commandlist);
 IMGUI_IMPL_API void     ImGui_ImplG4_Shutdown();
 IMGUI_IMPL_API void     ImGui_ImplG4_NewFrame();
+void ImGui_ImplG4_EnsureFontTexData();
 IMGUI_IMPL_API void     ImGui_ImplG4_RenderDrawData(ImDrawData* draw_data);
 
 // Use if you want to reset your rendering device without losing ImGui state.
