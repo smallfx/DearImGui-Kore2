@@ -77,7 +77,7 @@ static void keyboard_key_press(unsigned character, void *data) {
 
 static void mouse_move(int window, int x, int y, int movement_x, int movement_y, void *data) {
 	ImGuiIO &io = ImGui::GetIO();
-	io.MousePos = ImVec2((float)x * 2.0, (float)y * 2.0);
+	io.MousePos = ImVec2((float)x, (float)y);
 }
 
 static void mouse_press(int window, int button, int x, int y, void *data) {
