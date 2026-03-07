@@ -273,7 +273,7 @@ void ImGui_ImplG4_RenderDrawData(ImDrawData *draw_data) {
         kore_gpu_command_list_set_scissor_rect(g_KoreCommandList, (int)clip_min.x, (int)clip_min.y, (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y));
 
         // Draw
-        kore_gpu_command_list_draw_indexed(g_KoreCommandList, pcmd->ElemCount, 1, (pcmd->IdxOffset + global_idx_offset) * sizeof(ImDrawIdx), pcmd->VtxOffset + global_vtx_offset, 0);
+        kore_gpu_command_list_draw_indexed(g_KoreCommandList, pcmd->ElemCount, 1, pcmd->IdxOffset + global_idx_offset, pcmd->VtxOffset + global_vtx_offset, 0);
       }
     }
     global_idx_offset += cmd_list->IdxBuffer.Size;
@@ -344,8 +344,8 @@ static void ImGui_ImplG4_CreateFontsTexture() {
       .address_mode_u = KORE_GPU_ADDRESS_MODE_REPEAT,
       .address_mode_v = KORE_GPU_ADDRESS_MODE_REPEAT,
       .address_mode_w = KORE_GPU_ADDRESS_MODE_REPEAT,
-      .mag_filter     = KORE_GPU_FILTER_MODE_LINEAR,
       .min_filter     = KORE_GPU_FILTER_MODE_LINEAR,
+      .mag_filter     = KORE_GPU_FILTER_MODE_LINEAR,
       .mipmap_filter  = KORE_GPU_MIPMAP_FILTER_MODE_NEAREST,
       .lod_min_clamp  = 1,
       .lod_max_clamp  = 32,
